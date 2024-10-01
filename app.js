@@ -31,9 +31,9 @@ app.use('/api/contact', contact);
 app.use('/api/order', order);
 
 // error middleware
-app.use(errorMiddleware);
+app.use(errorMiddleware); 
+// hhhh
 
-app.listen(process.env.PORT, 'localhost',
-    ()=>{
+app.listen(process.env.PORT,()=>{
     console.log(`Backend server is running`)
 });
