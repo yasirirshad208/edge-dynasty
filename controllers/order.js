@@ -69,60 +69,123 @@ const stripe = Stripe(secKey);
     
   
       // Prepare the order confirmation message
-      const message = `
-      Order Details:
+      const htmlMessage = `
+      <html>
+      <body style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <h2 style="color: #f97316;">Order Details</h2>
 
-      Order Id: ${formattedOrderId}
+      <h3 style="color: #f97316;">Order ID: ${formattedOrderId}</h3>
       
-      Products:
+  
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+       <thead>
+         <tr>
+         <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">#</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Product Id</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Name</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Title</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Price</th> 
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Qty</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Total</th>
+         </tr>
+       </thead>
+       <tbody>
       ${productsWithDetails.map((product, index) => 
-        `  ${index + 1}. Name: ${product.name}, Title: ${product.title},ProductId: $${product.productId}, Price: $${product.price}, Quantity: ${product.quantity}, Total: $${product.totalPrice}`
+        `
+        <tr>
+          <td style="padding: 8px; color:black">${index + 1}</td>
+        <td style="padding: 8px;color:black">${product.productId}</td>
+        <td style="padding: 8px;color:black">${product.name}</td>
+        <td style="padding: 8px;color:black">${product.title}</td>
+        <td style="padding: 8px;color:black">$${product.price}</td>
+        <td style="padding: 8px;color:black">${product.quantity}</td>
+        <td style="padding: 8px;color:black">$${product.totalPrice}</td>
+        </tr>
+        `
       ).join('\n')}
+
+      </tbody>
+      </table>
       
-      Amount: $${amount}
-      Shipping: $30
+      <h4 style="color:black">Shipping: $30</h4>
+      <h4 style="color:black">Amount: $${amount}</h4>
       
-      Customer Information:
-      - Email: ${email}
-      - First Name: ${firstName}
-      - Last Name: ${lastName}
-      - Country: ${country}
-      - Street Address 1: ${streetAddress1}
-      - Street Address 2: ${streetAddress2 || 'N/A'}
-      - State / Province: ${state}
-      - City: ${city}
-      - Postal Code: ${postCode}
-      - Phone: ${phone}
+      <h3 style="color: #f97316;">Customer Information</h3>
+      <p style="color:black">
+      - Email: ${email}<br>
+      - First Name: ${firstName} ${lastName}<br>
+      - Country: ${country}<br>
+      - Street Address 1: ${streetAddress1}<br>
+      - Street Address 2: ${streetAddress2 || 'N/A'}<br>
+      - State / Province: ${state}<br>
+      - City: ${city}<br>
+      - Postal Code: ${postCode}<br>
+      - Phone: ${phone}<br>
+      </p>
       
-      Thank you for your order!
+      </div>
+      </html>
+      </body>
       `;
+
   
       await sendEmail({
         email: process.env.NOTIFICATION_EMAIL,
         subject: "Edge Dynasty Order",
-        message,
+        htmlMessage,
       });
   
       const emailMessage = `
-      Order Details:
+      <html>
+      <body style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <h2 style="color: #f97316;">Order Details</h2>
 
-      Order Id: ${formattedOrderId}
+      <h3 style="color: #f97316;">Order ID: ${formattedOrderId}</h3>
       
-      Products:
+  
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+       <thead>
+         <tr>
+         <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">#</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Name</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Title</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Price</th> 
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Qty</th>
+           <th style="text-align: left; padding: 8px; background-color: #f97316; color: white;">Total</th>
+         </tr>
+       </thead>
+       <tbody>
       ${productsWithDetails.map((product, index) => 
-        `  ${index + 1}. Name: ${product.name}, Title: ${product.title}, Price: $${product.price}, Quantity: ${product.quantity}, Total: $${product.totalPrice}`
+        `
+        <tr>
+          <td style="padding: 8px; color:black">${index + 1}</td>
+        <td style="padding: 8px;color:black">${product.name}</td>
+        <td style="padding: 8px;color:black">${product.title}</td>
+        <td style="padding: 8px;color:black">$${product.price}</td>
+        <td style="padding: 8px;color:black">${product.quantity}</td>
+        <td style="padding: 8px;color:black">$${product.totalPrice}</td>
+        </tr>
+        `
       ).join('\n')}
+
+      </tbody>
+      </table>
       
-      Amount: $${amount}
-      Shipping: $30
+      <h4 style="color:black">Shipping: $30</h4>
+      <h4 style="color:black">Amount: $${amount}</h4>
       
-      Thank you for your order!
+      <p style="color: #f97316;">Thank you for ordering.</p>
+      </div>
+      </html>
+      </body>
       `;
 
       await sendEmail({
         email: email,
         subject: "Edge Dynasty Order",
-        emailMessage,
+        htmlMessage:emailMessage,
       });
 
 
